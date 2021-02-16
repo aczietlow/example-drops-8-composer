@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+
+## Initialize local environment
+##
+## Usage: fin init-setup
+
+# Abort if anything fails
+set -e
+
+# Copy a settings file.
+# Skips if the destination file already exists.
+# @param $1 source file
+# @param $2 destination file
+copy_git_hook_file()
+{
+	local source="$1"
+	local dest="$2"
+
+	if [[ ! -f $dest ]]; then
+		echo "Copying ${dest}..."
+		cp $source $dest
+	else
+		echo "${dest} already in place."
+	fi
+}
+
+init_config ()
+{
+    copy_git_hook_file "${PROJECT_ROOT}/.docksal/config/commit-msg" "${PROJECT_ROOT}/.git/hooks"
+}
+
+# purtty.
+red='\033[0;31m'
+green='\033[0;32m'
+green_bg='\033[42m'
+yellow='\033[1;33m'
+NC='\033[0m'
+
+echo-red () { echo -e "${red}$1${NC}"; }
+echo-green () { echo -e "${green}$1${NC}"; }
+echo-green-bg () { echo -e "${green_bg}$1${NC}"; }
+echo-yellow () { echo -e "${yellow}$1${NC}"; }
+
+
+#-------------------------- Execution --------------------------------
+echo -e "${green_bg} Firing up the Stargate ${NC}${green} Initializing...${NC}"
+
+init_config
+

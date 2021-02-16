@@ -1,0 +1,26 @@
+version: "2.1"
+services:
+  web:
+    extends:
+      file: ${HOME}/.docksal/stacks/services.yml
+      service: apache
+    environment:
+      - APACHE_DOCUMENTROOT=/var/www/${DOCROOT:-docroot}
+      - APACHE_BASIC_AUTH_USER
+      - APACHE_BASIC_AUTH_PASS
+      - APACHE_FILE_PROXY
+    volumes:
+      - project_root:/var/www:ro,nocopy  # Project root volume
+      - ${PROJECT_ROOT}/.docksal/etc/apache/host.conf:/usr/local/apache2/conf/extra/includes/host.conf:ro
+    depends_on:
+      - cli
+
+  mail:
+    extends:
+      file: ${HOME}/.docksal/stacks/services.yml
+      service: mail
+  # Solr
+  solr:
+    extends:
+      file: ${HOME}/.docksal/stacks/services.yml
+      service: solr

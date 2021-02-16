@@ -1,0 +1,13 @@
+#!/bin/sh
+
+# Get the name of the current get branch and grep the ticket ID from the name.
+# Rev to put the branch first ahead of origin and ref strings, cut the origins, then unreverse.
+TICKET=$(git symbolic-ref HEAD | rev | cut -d/ -f1 | rev | grep -o -E "[A-Z]+-[0-9]+")
+
+# Skip altering the commit message if --fixup command is used with `git commit`
+[[ -n "$(cat $1 | grep 'fixup!')" ]] && FIXUP="YES"
+
+# If a ticket id is found preprend the commit message with it.
+if [[ -n "${TICKET}" && -z "${FIXUP}" ]]; then
+    sed -i.bak -e "1s/^/${TICKET} /" $1
+fi
